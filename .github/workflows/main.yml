@@ -1,0 +1,36 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: [16.x, 18.x]
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Linting
+        run: npm run lint
+
+      - name: Unit Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Staging
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm start
+          
